@@ -3,8 +3,24 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title>Untitled Document</title>
-    </head>
-    
+        <script type="text/javascript" src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
+   </head>
     <body>
+    	<div id="timer">
+    	</div>
+		<video id='media'/>
+		<script type="text/javascript">
+			window.onload = function() {
+				setInterval(function(){
+					document.getElementById("timer").innerHTML = (new Date()).toString();
+				},1000);
+			};
+		</script>
+		<script>
+			window.mediaElement = document.getElementById('media');
+			window.mediaManager = new cast.receiver.MediaManager(window.mediaElement);
+			window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
+			window.castReceiverManager.start();
+		</script>
     </body>
 </html>
