@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="http://code.jquery.com/jquery-git2.js"></script>
+    <style type="text/css">
+		body {
+			overflow:hidden;
+		}
+		div{
+			height:720PX;
+			width:1280PX;
+			text-align:center;
+			border:0px solid silver;
+			display: table-cell;
+			vertical-align:middle;
+			color:#000000;
+			background-color:#FFFFFF;
+			font-weight:bold;
+			font-family:Verdana, Geneva, sans-serif;
+			font-size:24px;
+		}
+    </style>
+    <title>Cast Dice</title>
+  </head>
+  <body>
+	<div id="result">
+
+  </div>
+  <script src="http://code.jquery.com/jquery-git2.js"></script>
+  <script type="text/javascript" src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
+  <script type="text/javascript" src="http://underscorejs.org/underscore-min.js"></script>
+  <script type="text/javascript" src="http://epeli.github.io/underscore.string/dist/underscore.string.min.js"></script>
+  <script type="text/javascript">
+
+  function sort(data){
+
+    var htmlList = '<ul>';
+
+    var elements = _.uniq(_.str.words(data, ",").sort(),true);
+    
+    _.each(elements,function(element){
+      htmlList += '<li>' + element + "</li>";
+    });
+
+    htmlList += '</ul>';
+
+    document.getElementById("result").innerHTML=htmlList;
+  }
+
+   $(document).ready(function() {
+      window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
+      
+      
+      // Chiudo l'applicazione quando non ci sono più client
+      castReceiverManager.onSenderDisconnected = function(event) {
+          console.log('Received Sender Disconnected event: ' + event.data);
+          if (window.castReceiverManager.getSenders().length == 0) {
+            window.close();
+          }
+      };
+
+      window.messageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:it.strazz.cast.sort');
+
+        // handler for the CastMessageBus message event
+        window.messageBus.onMessage = function(event) {
+          console.log('Message [' + event.senderId + ']: ' + event.data);
+          sort(event.data);
+        }
+
+      window.castReceiverManager.start();
+    });
+  </script>
+  </body>
+</html>
