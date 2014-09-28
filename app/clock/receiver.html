@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="http://code.jquery.com/jquery-git2.js"></script>
+    <style type="text/css">
+		body {
+			overflow:hidden;
+		}
+		div{
+			height:720PX;
+			width:1280PX;
+			text-align:center;
+			border:0px solid silver;
+			display: table-cell;
+			vertical-align:middle;
+			color:#000000;
+			background-color:#FFFFFF;
+			font-weight:bold;
+			font-family:Verdana, Geneva, sans-serif;
+			font-size:120px;
+		}
+    </style>
+    <title>Cast Hello Text</title>
+  </head>
+  <body>
+	<div>
+   <canvas class="CoolClock::250"></canvas>
+  </div>
+  <script src="http://code.jquery.com/jquery-git2.js"></script>
+  <script type="text/javascript" src="http://randomibis.com/coolclock/coolclock.js"></script>
+  <script type="text/javascript" src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
+  <script type="text/javascript">
+
+   $(document).ready(function() {
+      window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
+      
+      
+      // handler for 'senderdisconnected' event
+      castReceiverManager.onSenderDisconnected = function(event) {
+        console.log('Received Sender Disconnected event: ' + event.data);
+        if (window.castReceiverManager.getSenders().length == 0) {
+        window.close();
+      }
+      };
+
+      // initialize the CastReceiverManager with an application status message
+      window.castReceiverManager.start();
+
+      CoolClock.findAndCreateClocks();
+    });
+  </script>
+  </body>
+</html>
