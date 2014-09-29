@@ -38,7 +38,7 @@
 
     document.getElementById("playground").innerHTML=value;
 
-    window.messageBus.send(senderId, "Number: " + number);
+    window.messageBus.send(senderId, "Number: " + (number+1));
   };
 
    $(document).ready(function() {
