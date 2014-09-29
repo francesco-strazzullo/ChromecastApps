@@ -43,12 +43,7 @@
             };
 
             launchApp = function() {
-                chrome.cast.requestSession(onRequestSessionSuccess, onLaunchError);
-            };
-
-            onRequestSessionSuccess = function(s) {
-                console.log("session obtained");
-                session = s;
+                chrome.cast.requestSession(sessionListener, onLaunchError);
             };
             
             sessionListener = function(s) {
