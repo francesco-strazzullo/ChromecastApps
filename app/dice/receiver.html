@@ -30,9 +30,16 @@
   <script type="text/javascript" src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
   <script type="text/javascript">
 
-  function roll(){
-    document.getElementById("playground").innerHTML=String.fromCharCode(0x2680+Math.floor(Math.random()*6));
-  }
+  function roll(senderId){
+
+    var number = Math.floor(Math.random()*6);
+
+    var value = String.fromCharCode(0x2680+number);
+
+    document.getElementById("playground").innerHTML=value;
+
+    window.messageBus.send(senderId, "Number: " + number);
+  };
 
    $(document).ready(function() {
       window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
@@ -51,12 +58,10 @@
         // handler for the CastMessageBus message event
         window.messageBus.onMessage = function(event) {
           console.log('Message [' + event.senderId + ']: ' + event.data);
-          roll();
+          roll(event.senderId);
         }
 
       window.castReceiverManager.start();
-
-      CoolClock.findAndCreateClocks();
     });
   </script>
   </body>

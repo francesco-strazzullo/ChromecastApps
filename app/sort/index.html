@@ -42,11 +42,6 @@
                     console.log("device available");
                 }
             };
-
-            onRequestSessionSuccess = function(s) {
-                console.log("session obtained");
-                session = s;
-            };
             
             sessionListener = function(s) {
                 console.log("session obtained");
@@ -58,7 +53,7 @@
             };
 
             launchApp = function() {
-                chrome.cast.requestSession(onRequestSessionSuccess, onLaunchError);
+                chrome.cast.requestSession(sessionListener, onLaunchError);
             };
 
             onMessageSuccess = function(){

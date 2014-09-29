@@ -42,23 +42,13 @@
                     console.log("device available");
                 }
             };
-
-            onRequestSessionSuccess = function(s) {
-                console.log("session obtained");
-                session = s;
-            };
             
-            sessionListener = function(s) {
-                console.log("session obtained");
-                session = s;
-            };
-
             onLaunchError = function(e) {
                 console.log(e);
             };
 
             launchApp = function() {
-                chrome.cast.requestSession(onRequestSessionSuccess, onLaunchError);
+                chrome.cast.requestSession(sessionListener, onLaunchError);
             };
 
             onMessageSuccess = function(){
@@ -69,10 +59,21 @@
                 console.log('message not sent');
             };
 
+            sessionListener = function(s) {
+                console.log("session obtained");
+                session = s;
+                session.addMessageListener(namespace, receiverMessage);
+            };
+
             roll = function(){
                 if (session!=null) {
                     session.sendMessage(namespace, "roll!", onMessageSuccess, onMessageError);
                 };
+            };
+
+            receiverMessage = function(namespace, message) {
+                console.log("Message received:" + message);
+                document.getElementById("result").innerHTML=message;
             };
 
         </script>
@@ -84,6 +85,7 @@
             <button class="btn btn-default btn-lg" onclick="roll();">
                 Roll
             </button>
+            <h1 id="result"></h1>
     	</div>
     <body>
     </body>
