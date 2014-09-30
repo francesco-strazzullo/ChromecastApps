@@ -36,7 +36,7 @@
                 console.log("initialization succesful");
             };
 
-            onInitError = function(e) {
+            onError = function(e) {
                 console.log(e);
             };
 
@@ -46,12 +46,8 @@
                 }
             };
             
-            onLaunchError = function(e) {
-                console.log(e);
-            };
-
             launchApp = function() {
-                chrome.cast.requestSession(sessionListener, onLaunchError);
+                chrome.cast.requestSession(sessionListener, onError);
             };
 
             onMessageSuccess = function(){
