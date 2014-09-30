@@ -20,7 +20,7 @@
 			font-size:120px;
 		}
     </style>
-    <title>Cast Hello Text</title>
+    <title>Cast Clock</title>
   </head>
   <body>
 	<div>
@@ -35,7 +35,7 @@
       window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
       
       
-      // handler for 'senderdisconnected' event
+      // Chiudo l'applicazione quando non ci sono più sender collegati
       castReceiverManager.onSenderDisconnected = function(event) {
         console.log('Received Sender Disconnected event: ' + event.data);
         if (window.castReceiverManager.getSenders().length == 0) {
@@ -43,9 +43,9 @@
       }
       };
 
-      // initialize the CastReceiverManager with an application status message
       window.castReceiverManager.start();
 
+      //Creazione dell'orologio
       CoolClock.findAndCreateClocks();
     });
   </script>
