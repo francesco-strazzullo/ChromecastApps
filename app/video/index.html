@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Chromecast Chrome Sender App</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+        <script src="http://code.jquery.com/jquery-git2.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js"></script>
+        <script>
+            var session;
+            var currentMedia;
+
+            window['__onGCastApiAvailable'] = function(loaded, errorInfo) {
+                if (loaded) {
+                    initializeCastApi();
+                } else {
+                    console.log(errorInfo);
+                }
+            };
+
+            initializeCastApi = function() {
+                var sessionRequest = new chrome.cast.SessionRequest(chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID);
+                var apiConfig = new chrome.cast.ApiConfig(
+                        sessionRequest,
+                        sessionListener,
+                        receiverListener);
+                chrome.cast.initialize(apiConfig, onInitSuccess, onInitError);
+
+            };
+
+            onInitSuccess = function(e) {
+                console.log("initialization succesful");
+            };
+
+            onInitError = function(e) {
+                console.log(e);
+            };
+
+            receiverListener = function(e) {
+                if (e === chrome.cast.ReceiverAvailability.AVAILABLE) {
+                    console.log("device available");
+                }
+            };
+
+
+            launchApp = function() {
+                chrome.cast.requestSession(onRequestSessionSuccess, onLaunchError);
+            };
+
+            onRequestSessionSuccess = function(s) {
+                console.log("session obtained");
+                session = s;
+                //We can now load a media!
+                jQuery('#loadMedia').show();
+            };
+
+            sessionListener = function(s) {
+                console.log("session obtained");
+                session = s;
+                //We can now load a media!
+                jQuery('#loadMedia').show();
+            };
+
+            onLaunchError = function(e) {
+                console.log(e);
+            };
+            
+             loadMedia = function() {
+                var mediaInfo = new chrome.cast.media.MediaInfo('http://commondatastorage.googleapis.com/gtv-videos-bucket/big_buck_bunny_1080p.mp4');
+                mediaInfo.contentType = 'video/mp4';
+                var request = new chrome.cast.media.LoadRequest(mediaInfo);
+                session.loadMedia(request,onMediaDiscovered,onMediaError);
+            };
+
+            onMediaDiscovered = function(media) {
+                console.log("media loaded!");
+                currentMedia = media;
+                //We can now use the remote
+                jQuery('#remote').show();
+            };
+
+            onMediaError = function(e) {
+                console.log(e);
+            };
+            
+            play = function(){
+                currentMedia.play(null,onCommandSuccess,onCommandError);
+            };
+            
+            pause = function(){
+                currentMedia.pause(null,onCommandSuccess,onCommandError);
+            };
+            
+            stop = function(){
+                currentMedia.stop(null,onCommandSuccess,onCommandError);
+            };
+            
+            onCommandSuccess = function(e){
+                console.log("command invoked succesfully");
+            };
+            
+            onCommandError = function(e){
+                console.log(e);
+            };
+            
+        </script>
+    </head>
+    <body>
+        <button class="btn btn-lg" onclick="launchApp();">
+            <span class="glyphicon glyphicon-off"></span>
+        </button>
+        <button id="loadMedia" style="display: none" class="btn btn-lg" onclick="loadMedia();">
+            <span class="glyphicon glyphicon-folder-open"></span>
+        </button>
+        <div id="remote" style="display: none">
+            <hr/>
+            <button class="btn btn-lg" onclick="play();">
+                <span class="glyphicon glyphicon-play"></span>
+            </button>
+            <button class="btn btn-lg" onclick="pause();">
+                <span class="glyphicon glyphicon-pause"></span>
+            </button>
+            <button class="btn btn-lg" onclick="stop();">
+                <span class="glyphicon glyphicon-stop"></span>
+            </button>
+        </div>
+        
+    </body>
+</html>
