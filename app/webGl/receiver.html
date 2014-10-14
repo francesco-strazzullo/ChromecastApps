@@ -1,0 +1,87 @@
+
+<!-- saved from url=(0062)https://developer.mozilla.org/samples/webgl/sample5/index.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>WebGL Demo</title>
+    
+    <link rel="stylesheet" href="webgl.css" type="text/css">
+  
+    <!-- Fragment shader program -->
+
+    <script id="shader-fs" type="x-shader/x-fragment">
+    	varying lowp vec4 vColor;
+    	
+      void main(void) {
+        gl_FragColor = vColor;
+      }
+    </script>
+    
+    <!-- Vertex shader program -->
+    
+    <script id="shader-vs" type="x-shader/x-vertex">
+      attribute vec3 aVertexPosition;
+      attribute vec4 aVertexColor;
+    
+      uniform mat4 uMVMatrix;
+      uniform mat4 uPMatrix;
+      
+			varying lowp vec4 vColor;
+    
+      void main(void) {
+        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+        vColor = aVertexColor;
+      }
+    </script>
+     <style type="text/css">
+      body {
+        overflow:hidden;
+      }
+      div{
+        height:720PX;
+        width:1280PX;
+        text-align:center;
+        border:0px solid silver;
+        display: table-cell;
+        vertical-align:middle;
+        color:#000000;
+        background-color:#FFFFFF;
+        font-weight:bold;
+        font-family:Verdana, Geneva, sans-serif;
+        font-size:120px;
+      }
+      </style>
+  </head>
+  
+  <body onload="start()">
+    <canvas id="glcanvas" width="800" height="600">
+      Your browser doesn't appear to support the HTML5 <code>&lt;canvas&gt;</code> element.
+    </canvas>
+      <script src="sylvester.js" type="text/javascript"></script>
+      <script src="glUtils.js" type="text/javascript"></script>
+      <script src="webgl-demo.js" type="text/javascript"></script>
+      <script src="http://code.jquery.com/jquery-git2.js"></script>
+      <script type="text/javascript" src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
+      <script type="text/javascript">
+
+      $(document).ready(function() {
+        window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
+        
+        // Chiudo l'applicazione quando non ci sono più sender collegati
+        castReceiverManager.onSenderDisconnected = function(event) {
+          console.log('Received Sender Disconnected event: ' + event.data);
+          if (window.castReceiverManager.getSenders().length == 0) {
+            window.close();
+          }
+        };
+
+        window.castReceiverManager.start();
+
+        start();
+
+        //play sound!
+        var snd = new Audio("http://freewavesamples.com/files/Synthesized-Applause.wav"); 
+        snd.play();
+      });
+  </script>
+  </body>
+
+</html>

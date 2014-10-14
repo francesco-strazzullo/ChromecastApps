@@ -69,7 +69,7 @@
 
             loadMedia = function() {
                 var mediaInfo = new chrome.cast.media.MediaInfo('http://www.google.it/intl/it_ALL/chrome/assets/common/images/chromecast/marquee-product.png');
-                mediaInfo.contentType = 'image/jpeg';
+                mediaInfo.contentType = 'image/png';
                 var request = new chrome.cast.media.LoadRequest(mediaInfo);
                 session.loadMedia(request, onMediaDiscovered, onMediaError);
             };

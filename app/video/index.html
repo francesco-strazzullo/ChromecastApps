@@ -88,19 +88,19 @@
             play = function(){
                 currentMedia.play(null,onCommandSuccess,onCommandError);
             };
-            
+
             pause = function(){
                 currentMedia.pause(null,onCommandSuccess,onCommandError);
             };
-            
+
             stop = function(){
                 currentMedia.stop(null,onCommandSuccess,onCommandError);
             };
-            
+
             onCommandSuccess = function(e){
                 console.log("command invoked succesfully");
             };
-            
+
             onCommandError = function(e){
                 console.log(e);
             };
