@@ -22,7 +22,7 @@ module.exports = function (grunt) {
         options: {
           port: 9000,
           keepalive: true,
-          base:'app'
+          base:'./app'
         }
       }
     },
@@ -44,7 +44,7 @@ module.exports = function (grunt) {
   grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
    
     grunt.task.run([
-      'connect'
+      'connect:server'
     ]);
   });
 
