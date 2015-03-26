@@ -1,91 +1,93 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>Chromecast Apps</title>
-        <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-        <script src="http://code.jquery.com/jquery-git2.js"></script>
-        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js"></script>
-        <script type="text/javascript">
-            var namespace = 'urn:x-cast:it.strazz.cast.dice';
-        	var session;
 
-            window['__onGCastApiAvailable'] = function(loaded, errorInfo) {
-                if (loaded) {
-                    initializeCastApi();
-                } else {
-                    console.log(errorInfo);
-                }
-            };
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Chromecast Apps</title>
+    <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <script src="http://code.jquery.com/jquery-git2.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js"></script>
+    <script type="text/javascript">
+    var namespace = 'urn:x-cast:it.strazz.cast.dice';
+    var session;
 
-            initializeCastApi = function() {
-                var sessionRequest = new chrome.cast.SessionRequest('6F422F51');
-                var apiConfig = new chrome.cast.ApiConfig(
-                                                    sessionRequest,
-                                                    sessionListener,
-                                                    receiverListener);
-                chrome.cast.initialize(
-                                apiConfig, 
-                                onInitSuccess, 
-                                onError);
+    window['__onGCastApiAvailable'] = function(loaded, errorInfo) {
+        if (loaded) {
+            initializeCastApi();
+        } else {
+            console.log(errorInfo);
+        }
+    };
 
-            };
+    initializeCastApi = function() {
+        var sessionRequest = new chrome.cast.SessionRequest('6F422F51');
+        var apiConfig = new chrome.cast.ApiConfig(
+            sessionRequest,
+            sessionListener,
+            receiverListener);
+        chrome.cast.initialize(
+            apiConfig,
+            onInitSuccess,
+            onError);
 
-            onInitSuccess = function(e) {
-                console.log("initialization succesful");
-            };
+    };
 
-            onError = function(e) {
-                console.log(e);
-            };
+    onInitSuccess = function(e) {
+        console.log("initialization succesful");
+    };
 
-            receiverListener = function(e) {
-                if (e === chrome.cast.ReceiverAvailability.AVAILABLE) {
-                    console.log("device available");
-                }
-            };
-            
-            launchApp = function() {
-                chrome.cast.requestSession(sessionListener, onError);
-            };
+    receiverListener = function(e) {
+        if (e === chrome.cast.ReceiverAvailability.AVAILABLE) {
+            console.log("device available");
+        }
+    };
 
-            onMessageSuccess = function(){
-                console.log('message sent');
-            };
+    sessionListener = function(s) {
+        console.log("session obtained");
+        session = s;
+        session.addMessageListener(namespace, receiverMessage);
+    };
 
-            onMessageError = function(){
-                console.log('message not sent');
-            };
+    launchApp = function() {
+        chrome.cast.requestSession(sessionListener, onError);
+    };
 
-            sessionListener = function(s) {
-                console.log("session obtained");
-                session = s;
-                session.addMessageListener(namespace, receiverMessage);
-            };
+    roll = function() {
+        if (session != null) {
+            session.sendMessage(namespace, "roll!", onMessageSuccess, onMessageError);
+        };
+    };
 
-            roll = function(){
-                if (session!=null) {
-                    session.sendMessage(namespace, "roll!", onMessageSuccess, onMessageError);
-                };
-            };
+    onMessageSuccess = function() {
+        console.log('message sent');
+    };
 
-            receiverMessage = function(namespace, message) {
-                console.log("Message received:" + message);
-                document.getElementById("result").innerHTML=message;
-            };
+    onMessageError = function() {
+        console.log('message not sent');
+    };
 
-        </script>
-    </head>
-    	<div class="jumbotron text-center">
-    		<button class="btn btn-default btn-lg" onclick="launchApp();">
-    			Connect!
-    		</button>
-            <button class="btn btn-default btn-lg" onclick="roll();">
-                Roll
-            </button>
-            <h1 id="result"></h1>
-    	</div>
-    <body>
-    </body>
+    receiverMessage = function(namespace, message) {
+        console.log("Message received:" + message);
+        document.getElementById("result").innerHTML = message;
+    };
+
+    onError = function(e) {
+        console.log(e);
+    };
+    </script>
+</head>
+<div class="jumbotron text-center">
+    <button class="btn btn-default btn-lg" onclick="launchApp();">
+        Connect!
+    </button>
+    <button class="btn btn-default btn-lg" onclick="roll();">
+        Roll
+    </button>
+    <h1 id="result"></h1>
+</div>
+
+<body>
+</body>
+
 </html>
